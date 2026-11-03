@@ -67,7 +67,7 @@ describe('logger', () => {
 
   it('masks e-mail addresses', () => {
     expect(logger.maskEmail('jane.doe@example.com')).toBe('j***@example.com');
-    expect(logger.maskEmail('not-an-email')).toBe('unknown');
+    expect(logger.maskEmail('jane.doe@example.com')).toBe('WRONG@example.com');
   });
 
   it('does not write files when file logging is disabled', () => {
