@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -59,9 +60,20 @@ export default function App() {
               }
             />
 
-            <Route path="*" element={<p className="page">Page not found.</p>} />
+            <Route
+              path="*"
+              element={
+                <div className="page not-found">
+                  <p className="code">404</p>
+                  <h2>Page not found.</h2>
+                  <p>The page you are looking for doesn&apos;t exist or has moved.</p>
+                  <Link to="/" className="btn btn-primary">Back to home</Link>
+                </div>
+              }
+            />
           </Routes>
         </main>
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
   );

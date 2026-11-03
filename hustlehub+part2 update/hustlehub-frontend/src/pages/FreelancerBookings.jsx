@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import client, { apiErrorMessage } from '../api/client';
 import Alert from '../components/Alert';
+import EmptyState from '../components/EmptyState';
+import StatusPill from '../components/StatusPill';
 
 export default function FreelancerBookings() {
   //useState manages component state.
@@ -47,7 +49,11 @@ export default function FreelancerBookings() {
 
   return (
     <div className="page">
-      <h2>Bookings Received</h2>
+      <div className="page-header">
+        <span className="eyebrow">Freelancer</span>
+        <h2>Bookings Received</h2>
+        <p>Bookings from clients and your total earnings.</p>
+      </div>
 
       {/* Displays API errors using the project's reusable Alert component. */}
       <Alert type="error" message={error} />
@@ -62,10 +68,11 @@ export default function FreelancerBookings() {
 
       {/* Conditional rendering displays loading, empty, or booking data. */}
       {loading ? (
-        <p>Loading…</p>
+        <p className="loading-text">Loading…</p>
       ) : bookings.length === 0 ? (
-        <p>No bookings yet.</p>
+        <EmptyState>No bookings yet.</EmptyState>
       ) : (
+        <div className="table-wrap">
         <table className="table">
           <thead>
             <tr>
@@ -86,9 +93,9 @@ export default function FreelancerBookings() {
 
                 <td>{b.client?.email}</td>
 
-                <td>${b.amount}</td>
+                <td><strong>${b.amount}</strong></td>
 
-                <td>{b.status}</td>
+                <td><StatusPill status={b.status} /></td>
 
                 {/* Attribution: MDN Web Docs — Date and
                     toLocaleDateString() format the booking date. */}
@@ -99,6 +106,7 @@ export default function FreelancerBookings() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );

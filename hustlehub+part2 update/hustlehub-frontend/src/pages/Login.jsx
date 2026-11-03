@@ -32,35 +32,48 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-page">
-      <h2>Log in</h2>
-      <Alert type="error" message={error} />
-      <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
-        />
+    <div className="auth-wrap">
+      <div className="auth-shell">
+        <aside className="auth-side">
+          <img src="/images/auth.svg" alt="" />
+          <div className="auth-side-copy">
+            <h3>Welcome back</h3>
+            <p>Log in to manage your gigs, bookings and income.</p>
+          </div>
+        </aside>
 
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-        />
+        <div className="auth-page">
+          <h2>Log in</h2>
+          <p className="auth-sub">Enter your details to access your account.</p>
+          <Alert type="error" message={error} />
+          <form onSubmit={handleSubmit} noValidate>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
 
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Logging in…' : 'Log in'}
-        </button>
-      </form>
-      <p>
-        No account? <Link to="/register">Register here</Link>
-      </p>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+
+            <button type="submit" disabled={submitting}>
+              {submitting ? 'Logging in…' : 'Log in'}
+            </button>
+          </form>
+          <p>
+            No account? <Link to="/register">Register here</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

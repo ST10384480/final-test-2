@@ -36,43 +36,56 @@ export default function Register() {
   };
 
   return (
-    <div className="auth-page">
-      <h2>Create an account</h2>
-      <Alert type="error" message={error} />
-      <Alert type="success" message={success} />
-      <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
-        />
+    <div className="auth-wrap">
+      <div className="auth-shell">
+        <aside className="auth-side">
+          <img src="/images/auth.svg" alt="" />
+          <div className="auth-side-copy">
+            <h3>Start your journey</h3>
+            <p>Hire great talent or turn your skills into income.</p>
+          </div>
+        </aside>
 
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="new-password"
-        />
-        <small>At least 8 characters, with uppercase, lowercase, a number, and a symbol.</small>
+        <div className="auth-page">
+          <h2>Create an account</h2>
+          <p className="auth-sub">It only takes a minute to get set up.</p>
+          <Alert type="error" message={error} />
+          <Alert type="success" message={success} />
+          <form onSubmit={handleSubmit} noValidate>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
 
-        <label htmlFor="role">I am a…</label>
-        <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="client">Client (I want to hire)</option>
-          <option value="freelancer">Freelancer (I want to sell gigs)</option>
-        </select>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+            />
+            <small>At least 8 characters, with uppercase, lowercase, a number, and a symbol.</small>
 
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Creating account…' : 'Register'}
-        </button>
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
+            <label htmlFor="role">I am a…</label>
+            <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="client">Client (I want to hire)</option>
+              <option value="freelancer">Freelancer (I want to sell gigs)</option>
+            </select>
+
+            <button type="submit" disabled={submitting}>
+              {submitting ? 'Creating account…' : 'Register'}
+            </button>
+          </form>
+          <p>
+            Already have an account? <Link to="/login">Log in</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

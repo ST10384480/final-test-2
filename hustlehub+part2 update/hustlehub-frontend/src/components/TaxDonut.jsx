@@ -18,7 +18,7 @@ export default function TaxDonut({ netIncome = 0, estimatedTax = 0 }) {
         className="donut-svg"
         data-testid="tax-donut"
       >
-        <circle cx="21" cy="21" r={radius} fill="none" stroke="#e3e3ee" strokeWidth="6" />
+        <circle cx="21" cy="21" r={radius} fill="none" stroke="#e2e8f0" strokeWidth="5.5" />
         {total > 0 && (
           <>
             <circle
@@ -26,8 +26,8 @@ export default function TaxDonut({ netIncome = 0, estimatedTax = 0 }) {
               cy="21"
               r={radius}
               fill="none"
-              stroke="#2a9d8f"
-              strokeWidth="6"
+              stroke="#10b981"
+              strokeWidth="5.5"
               strokeDasharray={`${netPct} ${100 - netPct}`}
               strokeDashoffset="25"
             />
@@ -36,8 +36,8 @@ export default function TaxDonut({ netIncome = 0, estimatedTax = 0 }) {
               cy="21"
               r={radius}
               fill="none"
-              stroke="#e76f51"
-              strokeWidth="6"
+              stroke="#f97316"
+              strokeWidth="5.5"
               strokeDasharray={`${taxPct} ${100 - taxPct}`}
               strokeDashoffset={25 - netPct}
             />
@@ -46,10 +46,10 @@ export default function TaxDonut({ netIncome = 0, estimatedTax = 0 }) {
       </svg>
       <ul className="legend">
         <li>
-          <span className="swatch" style={{ background: '#2a9d8f' }} /> Net income {formatMoney(netIncome)}
+          <span className="swatch" style={{ background: '#10b981' }} /> Net income {formatMoney(netIncome)}
         </li>
         <li>
-          <span className="swatch" style={{ background: '#e76f51' }} /> Estimated tax {formatMoney(estimatedTax)}
+          <span className="swatch" style={{ background: '#f97316' }} /> Estimated tax {formatMoney(estimatedTax)}
         </li>
       </ul>
     </div>

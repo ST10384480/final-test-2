@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import client, { apiErrorMessage } from '../api/client';
 import Alert from '../components/Alert';
+import EmptyState from '../components/EmptyState';
+import StatusPill from '../components/StatusPill';
+import { categoryImage, CATEGORY_LIST } from '../utils/categories';
 
 // This object defines the default values for a new gig form.
 const emptyForm = {
@@ -121,127 +124,131 @@ export default function FreelancerGigs() {
 
   return (
     <div className="page">
-      <h2>My Gigs</h2>
+      <div className="page-header">
+        <span className="eyebrow">Freelancer</span>
+        <h2>My Gigs</h2>
+        <p>Create, edit and manage the services you offer to clients.</p>
+      </div>
 
       {/* Displays error and success messages using the reusable
           Alert component defined in this project. */}
       <Alert type="error" message={error} />
       <Alert type="success" message={success} />
 
-      {/* use state values and onChange handlers to manage user input. */}
-      <form onSubmit={handleSubmit} className="gig-form">
-        <h3>{editingId ? 'Edit gig' : 'Create a new gig'}</h3>
+      <div className="manage-grid">
+        {/* use state values and onChange handlers to manage user input. */}
+        <form onSubmit={handleSubmit} className="gig-form card">
+          <h3>{editingId ? 'Edit gig' : 'Create a new gig'}</h3>
 
-        <label htmlFor="title">Title</label>
-        <input
-          id="title"
-          value={form.title}
-          onChange={handleChange('title')}
-          maxLength={120}
-          required
-        />
+          <label htmlFor="title">Title</label>
+          <input
+            id="title"
+            value={form.title}
+            onChange={handleChange('title')}
+            maxLength={120}
+            required
+          />
 
-        <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          value={form.description}
-          onChange={handleChange('description')}
-          maxLength={2000}
-          required
-        />
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            value={form.description}
+            onChange={handleChange('description')}
+            maxLength={2000}
+            required
+          />
 
-        <label htmlFor="category">Category</label>
-        <select
-          id="category"
-          value={form.category}
-          onChange={handleChange('category')}
-        >
-          {/*  Array.map() generates a option element for each available gig category. */}
-          {[
-            'design',
-            'development',
-            'writing',
-            'marketing',
-            'video',
-            'music',
-            'business',
-            'other'
-          ].map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            value={form.category}
+            onChange={handleChange('category')}
+          >
+            {/*  Array.map() generates a option element for each available gig category. */}
+            {CATEGORY_LIST.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
 
-        <label htmlFor="price">Price (USD)</label>
-        <input
-          id="price"
-          type="number"
-          min="1"
-          value={form.price}
-          onChange={handleChange('price')}
-          required
-        />
+          <label htmlFor="price">Price (USD)</label>
+          <input
+            id="price"
+            type="number"
+            min="1"
+            value={form.price}
+            onChange={handleChange('price')}
+            required
+          />
 
-        <label htmlFor="deliveryDays">Delivery time (days)</label>
-        <input
-          id="deliveryDays"
-          type="number"
-          min="1"
-          max="90"
-          value={form.deliveryDays}
-          onChange={handleChange('deliveryDays')}
-          required
-        />
+          <label htmlFor="deliveryDays">Delivery time (days)</label>
+          <input
+            id="deliveryDays"
+            type="number"
+            min="1"
+            max="90"
+            value={form.deliveryDays}
+            onChange={handleChange('deliveryDays')}
+            required
+          />
 
-        <div className="form-actions">
-          {/* Conditional rendering changes the button label
-              depending on whether the user is editing or creating a gig. */}
-          <button type="submit">
-            {editingId ? 'Save changes' : 'Create gig'}
-          </button>
-
-          {editingId && (
-            <button type="button" onClick={resetForm}>
-              Cancel
+          <div className="form-actions">
+            {/* Conditional rendering changes the button label
+                depending on whether the user is editing or creating a gig. */}
+            <button type="submit">
+              {editingId ? 'Save changes' : 'Create gig'}
             </button>
+
+            {editingId && (
+              <button type="button" onClick={resetForm}>
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+
+        <section>
+          <h3>Your listings</h3>
+
+          {/* conditional rendering displays loading, empty, or populated listing states. */}
+          {loading ? (
+            <p className="loading-text">Loading…</p>
+          ) : gigs.length === 0 ? (
+            <EmptyState>You haven't created any gigs yet.</EmptyState>
+          ) : (
+            <ul className="gig-list">
+              {/* Array.map() renders each gig as a list item. The unique ID is used as the React key. */}
+              {gigs.map((gig) => (
+                <li key={gig._id} className="gig-list-item">
+                  <div className="gig-list-main">
+                    <img className="gig-thumb" src={categoryImage(gig.category)} alt="" loading="lazy" />
+                    <div>
+                      <strong className="gig-list-title">{gig.title}</strong>
+                      <div className="gig-list-sub">
+                        <span>${gig.price}</span>
+                        <StatusPill status={gig.isActive ? 'active' : 'inactive'} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Event handlers connect the Edit and Delete buttons
+                      to their respective functions. */}
+                  <div className="gig-list-actions">
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleEdit(gig)}>
+                      Edit
+                    </button>
+
+                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(gig._id)}>
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
-        </div>
-      </form>
-
-      <h3>Your listings</h3>
-
-      {/*conditional rendering displays loading, empty, or populated listing states. */}
-      {loading ? (
-        <p>Loading…</p>
-      ) : gigs.length === 0 ? (
-        <p>You haven't created any gigs yet.</p>
-      ) : (
-        <ul className="gig-list">
-          {/* Attribution: MDN Web Docs — Array.map() renders each
-              gig as a list item. The unique ID is used as the React key. */}
-          {gigs.map((gig) => (
-            <li key={gig._id} className="gig-list-item">
-              <div>
-                <strong>{gig.title}</strong> — ${gig.price} (
-                {gig.isActive ? 'active' : 'inactive'})
-              </div>
-
-              {/* Event handlers connect the Edit and Delete buttons
-                  to their respective functions. */}
-              <div className="gig-list-actions">
-                <button onClick={() => handleEdit(gig)}>
-                  Edit
-                </button>
-
-                <button onClick={() => handleDelete(gig._id)}>
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+        </section>
+      </div>
     </div>
   );
 }

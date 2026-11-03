@@ -1,45 +1,38 @@
 import { Link } from 'react-router-dom';
+import { categoryImage } from '../utils/categories';
 
 export default function GigCard({ gig, actions }) {
-  // Attribution: React documentation — props allow the component
-  // to receive gig information and optional action elements.
+  const email = gig.freelancer?.email;
+
   return (
     <div className="gig-card" data-testid="gig-card">
-      <div className="gig-card-header">
-        {/* Displays the gig title and category from the supplied props. */}
-        <h3>{gig.title}</h3>
+      <div className="gig-card-media">
+        {/* Decorative category illustration (alt is empty on purpose). */}
+        <img src={categoryImage(gig.category)} alt="" loading="lazy" />
         <span className="gig-category">{gig.category}</span>
       </div>
 
-      {/* Displays a description of the service offered. */}
-      <p className="gig-description">{gig.description}</p>
+      <div className="gig-card-body">
+        <h3>{gig.title}</h3>
 
-      <div className="gig-meta">
-        {/* Displays the price and estimated delivery time. */}
-        <span className="gig-price">${gig.price}</span>
-        <span className="gig-delivery">
-          {gig.deliveryDays} day delivery
-        </span>
-      </div>
+        <p className="gig-description">{gig.description}</p>
 
-      {/* Attribution: JavaScript optional chaining and React conditional
-          rendering display freelancer information only when an email exists. */}
-      {gig.freelancer?.email && (
-        <p className="gig-freelancer">
-          By {gig.freelancer.email}
-        </p>
-      )}
+        {email && (
+          <p className="gig-freelancer">
+            <span className="avatar avatar-sm" aria-hidden="true">{email.charAt(0).toUpperCase()}</span>
+            <span>By {email}</span>
+          </p>
+        )}
 
-      <div className="gig-card-footer">
-        {/* Attribution: React Router documentation — Link navigates to
-            the gig details route without a full-page browser reload.
-            The template literal inserts the gig's unique ID into the URL. */}
-        <Link to={`/gigs/${gig._id}`}>
-          View details
-        </Link>
+        <div className="gig-meta">
+          <span className="gig-price">${gig.price}</span>
+          <span className="gig-delivery">{gig.deliveryDays} day delivery</span>
+        </div>
 
-        {/* Renders optional action elements supplied by the parent component. */}
-        {actions}
+        <div className="gig-card-footer">
+          <Link to={`/gigs/${gig._id}`} className="gig-link">View details</Link>
+          {actions}
+        </div>
       </div>
     </div>
   );

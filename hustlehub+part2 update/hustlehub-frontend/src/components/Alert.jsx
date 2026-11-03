@@ -1,17 +1,10 @@
 export default function Alert({ type = 'error', message }) {
-  // Attribution: JavaScript conditional logic and React rendering.
   // If no message is supplied, the component renders nothing.
   if (!message) return null;
 
   return (
-    // Attribution: JavaScript template literals create dynamic class names
-    // and a test identifier based on the selected alert type.
     // The alert role supports accessibility for dynamically displayed messages.
-    <div
-      className={`alert alert-${type}`}
-      role="alert"
-      data-testid={`alert-${type}`}
-    >
+    <div className={`alert alert-${type}`} role="alert" data-testid={`alert-${type}`}>
       {message}
     </div>
   );

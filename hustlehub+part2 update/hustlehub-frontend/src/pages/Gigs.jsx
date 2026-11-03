@@ -2,22 +2,12 @@ import { useEffect, useState } from 'react';
 import client, { apiErrorMessage } from '../api/client';
 import GigCard from '../components/GigCard';
 import Alert from '../components/Alert';
+import EmptyState from '../components/EmptyState';
+import { CATEGORY_LIST } from '../utils/categories';
 
-// Defines the available categories for filtering gig listings.
-const CATEGORIES = [
-  '',
-  'design',
-  'development',
-  'writing',
-  'marketing',
-  'video',
-  'music',
-  'business',
-  'other'
-];
+const CATEGORIES = ['', ...CATEGORY_LIST];
 
 export default function Gigs() {
-
   // These variables store the gig listings, selected category,
   // error message, and loading status.
   const [gigs, setGigs] = useState([]);
@@ -25,7 +15,7 @@ export default function Gigs() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Get requests retrieve data from the backend API The optional category is sent as a query parameter.
+  // Get requests retrieve data from the backend API. The optional category is sent as a query parameter.
   const fetchGigs = async (cat) => {
     setLoading(true);
     setError('');
@@ -34,61 +24,56 @@ export default function Gigs() {
       const { data } = await client.get('/gigs', {
         params: cat ? { category: cat } : {}
       });
-
-      // Updates the state with the gigs returned by the API.
       setGigs(data.gigs);
     } catch (err) {
-      // Displays a readable error if the request fails.
       setError(apiErrorMessage(err, 'Could not load gigs.'));
     } finally {
-      // Resets the loading state after the request completes.
       setLoading(false);
     }
   };
 
-  // useEffect runs the fetching function when the component mounts and whenever the category changes.
+  // Runs when the component mounts and whenever the category changes.
   useEffect(() => {
     fetchGigs(category);
 
-    // The dependency warning is disabled because fetchGigs is defined
-    // inside the component and is intentionally not included as a dependency.
-    // The effect is triggered by changes to category.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
   return (
     <div className="page">
-      <h2>Browse Gigs</h2>
+      <div className="page-header">
+        <span className="eyebrow">Marketplace</span>
+        <h2>Browse Gigs</h2>
+        <p>Discover services from talented freelancers and book in a few clicks.</p>
+      </div>
 
-      {/* Displays API errors using the project's reusable Alert component. */}
       <Alert type="error" message={error} />
 
-      {/* Attribution: HTML form controls — the select element allows
-          users to choose a category for filtering the gig listings. */}
-      <label htmlFor="category-filter">Filter by category</label>
-
-      <select
-        id="category-filter"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      >
-        {/* Array.map() creates an option for every available category. */}
+      <div className="chip-row" role="group" aria-label="Filter by category">
         {CATEGORIES.map((c) => (
-          <option key={c || 'all'} value={c}>
+          <button
+            key={c || 'all'}
+            type="button"
+            className={`chip ${category === c ? 'is-active' : ''}`}
+            aria-pressed={category === c}
+            onClick={() => setCategory(c)}
+          >
             {c ? c : 'All categories'}
-          </option>
+          </button>
         ))}
-      </select>
+      </div>
 
-      {/* Conditional rendering displays loading, empty, or populated results states. */}
       {loading ? (
-        <p>Loading gigs…</p>
+        <div className="gig-grid" aria-busy="true">
+          <p className="loading-text" style={{ gridColumn: '1 / -1', margin: 0 }}>Loading gigs…</p>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="skeleton" />
+          ))}
+        </div>
       ) : gigs.length === 0 ? (
-        <p>No gigs found.</p>
+        <EmptyState>No gigs found.</EmptyState>
       ) : (
         <div className="gig-grid">
-          {/* Array.map() renders a GigCard for every returned gig. The unique gig ID
-              provides a stable React key. */}
           {gigs.map((gig) => (
             <GigCard key={gig._id} gig={gig} />
           ))}

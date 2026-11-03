@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import client, { apiErrorMessage } from '../api/client';
 import Alert from '../components/Alert';
+import EmptyState from '../components/EmptyState';
+import StatusPill from '../components/StatusPill';
 
 export default function ClientBookings() {
   
@@ -57,7 +59,11 @@ export default function ClientBookings() {
 
   return (
     <div className="page">
-      <h2>My Bookings</h2>
+      <div className="page-header">
+        <span className="eyebrow">Client</span>
+        <h2>My Bookings</h2>
+        <p>Every gig you have booked, with its status and amount.</p>
+      </div>
 
       {/* Display an error message when the API request fails.
           Attribution: Custom Alert component from this project. */}
@@ -65,10 +71,11 @@ export default function ClientBookings() {
 
       {/* conditional rendering selects the appropriate interface state. */}
       {loading ? (
-        <p>Loading…</p>
+        <p className="loading-text">Loading…</p>
       ) : bookings.length === 0 ? (
-        <p>You haven't booked any gigs yet.</p>
+        <EmptyState>You haven't booked any gigs yet.</EmptyState>
       ) : (
+        <div className="table-wrap">
         <table className="table">
           <thead>
             <tr>
@@ -90,9 +97,9 @@ export default function ClientBookings() {
                 <td>{b.freelancer?.email}</td>
 
                 {/* Display the booking amount with a dollar sign. */}
-                <td>${b.amount}</td>
+                <td><strong>${b.amount}</strong></td>
 
-                <td>{b.status}</td>
+                <td><StatusPill status={b.status} /></td>
 
                 {/*Date and toLocaleDateString() format the booking date. */}
                 <td>
@@ -102,6 +109,7 @@ export default function ClientBookings() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import Alert from '../components/Alert';
 import IncomeBarChart from '../components/IncomeBarChart';
 import TaxDonut from '../components/TaxDonut';
 import { formatMoney, formatPercent } from '../utils/format';
+import { IconWallet, IconPercent, IconTrend, IconChart } from '../components/Icons';
 
 // Freelancer income & tax dashboard: summary cards, charts and the bracket table.
 // All figures come from GET /api/bookings/freelancer/tax-summary; the tax
@@ -35,39 +36,55 @@ export default function FreelancerDashboard() {
 
   return (
     <div className="page">
-      <h2>Income &amp; Tax Dashboard</h2>
+      <div className="page-header">
+        <span className="eyebrow">Freelancer</span>
+        <h2>Income &amp; Tax Dashboard</h2>
+        <p>Track your earnings and see an estimate of the tax you may owe.</p>
+      </div>
 
       <Alert type="error" message={error} />
 
-      {loading && <p>Loading…</p>}
+      {loading && <p className="loading-text">Loading…</p>}
 
       {!loading && summary && (
         <>
           <div className="stat-grid" data-testid="stat-grid">
             <div className="stat-card">
-              <span className="stat-label">Gross income</span>
+              <div className="stat-top">
+                <span className="stat-label">Gross income</span>
+                <span className="stat-icon"><IconWallet /></span>
+              </div>
               <strong data-testid="stat-gross">{formatMoney(summary.totalIncome)}</strong>
               <small>{summary.transactionCount} transaction(s)</small>
             </div>
-            <div className="stat-card">
-              <span className="stat-label">Estimated tax</span>
+            <div className="stat-card orange">
+              <div className="stat-top">
+                <span className="stat-label">Estimated tax</span>
+                <span className="stat-icon"><IconPercent /></span>
+              </div>
               <strong data-testid="stat-tax">{formatMoney(summary.estimatedTax)}</strong>
               <small>Effective rate {formatPercent(summary.effectiveRate)}</small>
             </div>
-            <div className="stat-card">
-              <span className="stat-label">Net income</span>
+            <div className="stat-card green">
+              <div className="stat-top">
+                <span className="stat-label">Net income</span>
+                <span className="stat-icon"><IconTrend /></span>
+              </div>
               <strong data-testid="stat-net">{formatMoney(summary.netIncome)}</strong>
               <small>After estimated tax</small>
             </div>
-            <div className="stat-card">
-              <span className="stat-label">Marginal rate</span>
+            <div className="stat-card violet">
+              <div className="stat-top">
+                <span className="stat-label">Marginal rate</span>
+                <span className="stat-icon"><IconChart /></span>
+              </div>
               <strong data-testid="stat-marginal">{formatPercent(summary.marginalRate)}</strong>
               <small>Rate on your next earnings</small>
             </div>
           </div>
 
           {summary.transactionCount === 0 && (
-            <p data-testid="empty-state">
+            <p className="notice" data-testid="empty-state">
               You have no income yet. Once clients book your gigs, your earnings and estimated tax will appear here.
             </p>
           )}
@@ -86,6 +103,7 @@ export default function FreelancerDashboard() {
           <section className="chart-card">
             <h3>How your tax was calculated</h3>
             <p>{summary.method}</p>
+            <div className="table-wrap">
             <table className="table" data-testid="bracket-table">
               <thead>
                 <tr>
@@ -108,6 +126,7 @@ export default function FreelancerDashboard() {
                 ))}
               </tbody>
             </table>
+            </div>
             <p className="disclaimer">{summary.disclaimer}</p>
           </section>
         </>
